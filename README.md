@@ -1,5 +1,9 @@
 # Galactus: The Coming Hunger
 
+[Descarcă versiunea 1.1.0](https://github.com/Zmirzz/galactus-first-steps/releases/tag/v1.1.0) — JAR instalabil, surse, demo și instrucțiuni. **Minecraft Java 1.21.1 · Fabric · Java 21**.
+
+![Silver Surfer în Minecraft](docs/images/silver-surfer.png)
+
 Un mod survival pentru **Minecraft Java 1.21.1 + Fabric**. Silver Surfer anunță venirea lui Galactus; ai timp să te pregătești înainte ca uriașul să înceapă să consume lumea. Interpretare Minecraft originală, inspirată de *The Fantastic Four: First Steps*, cu armură violet, cască cu extensii laterale și Silver Surfer pe o placă argintie.
 
 ## Instalare în modpackul CurseForge
@@ -93,6 +97,8 @@ Operator / cheats: `/galactus start`, `/galactus arrive`, `/galactus invade`, `/
 Verificat cu Fabric API, client și server dedicate locale. Interacțiunile survival pentru Nullifier și portal au fost probate live; alianța, pragul de sănătate și toate cele trei finaluri au fost probate în joc cu scenarii accelerate. Nu este încă testat într-un modpack mare sau pe un server cu mulți jucători. Modelele folosesc geometrie Minecraft articulată, texturi pictate pe fiecare suprafață și măști luminoase. Titlurile cinematice, avertismentul și dialogul Silver Surfer sunt localizate în română și engleză. Jurnalul și unele mesaje de luptă sunt în engleză.
 
 În versiunea **1.1.0**, Silver Surfer se apropie pe placă, plutește în apropierea jucătorului și își ține poziția când te apropii pentru interacțiune. Placa are vârfuri îngustate, margini luminoase și urmă cosmică. Galactus are armură stratificată, mănuși și genunchiere separate, extensii de cască înclinate, trăsături ale feței și ochi luminoși. Sosirea deschide o falie circulară în cer. Evenimentele au două sunete cosmice originale.
+
+![Galactus în Minecraft](docs/images/galactus.png)
 
 Nu scoate modul dintr-o lume în care vrei să păstrezi obiectele/blocurile lui. Pentru depanare, păstrează `logs/latest.log` și specifică versiunile Minecraft, Fabric Loader și Fabric API.
 

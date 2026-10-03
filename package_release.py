@@ -8,7 +8,7 @@ for name in [f'galactus-first-steps-{VERSION}.jar',f'galactus-first-steps-{VERSI
 for name in ['README.md','LICENSE','CHANGELOG.md']:
     shutil.copy2(ROOT/name,OUT/name)
 shutil.copy2(ROOT/'run-prod/config/galactus.json',OUT/'galactus.example.json')
-sources=list((ROOT/'src').rglob('*'))+list((ROOT/'gradle').rglob('*'))
+sources=list((ROOT/'src').rglob('*'))+list((ROOT/'gradle').rglob('*'))+list((ROOT/'docs').rglob('*'))
 sources += [ROOT/n for n in ['build.gradle','settings.gradle','gradle.properties','gradlew.bat','build.ps1','bootstrap.ps1','generate_assets.py','generate_character_art.py','generate_audio.py','revise_presentation.py','package_release.py','README.md','LICENSE','CHANGELOG.md','.gitignore']]
 with zipfile.ZipFile(OUT/f'galactus-first-steps-{VERSION}-source-project.zip','w',zipfile.ZIP_DEFLATED) as z:
     for p in sorted(sources):
