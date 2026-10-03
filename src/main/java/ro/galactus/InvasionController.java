@@ -47,14 +47,26 @@ public final class InvasionController {
         switch(s.stage) {
             case InvasionState.PREPARATION -> {
                 int left=CONFIG.preparationDays*1200-s.seconds;
-                BAR.setName(Text.literal("HERALD'S WARNING  •  "+clock(left)+" to prepare"));BAR.setColor(BossBar.Color.PURPLE);BAR.setPercent(clamp(left/(float)(CONFIG.preparationDays*1200)));
+                BAR.setName(Text.translatable("galactus.bar.prepare",clock(left)));BAR.setColor(BossBar.Color.PURPLE);BAR.setPercent(clamp(left/(float)(CONFIG.preparationDays*1200)));
+                if(s.seconds==4)translatedMessage(w,"galactus.dialogue.chosen",Formatting.AQUA);
+                if(s.seconds==11)translatedMessage(w,"galactus.dialogue.prepare",Formatting.GRAY);
                 if(left==600 || left==300 || left==60)message(w,"The herald: Galactus approaches. "+clock(left)+" remains.",Formatting.LIGHT_PURPLE);
                 if(left<=0)arrive(w);
             }
             case InvasionState.ARRIVAL -> {
                 int left=CONFIG.arrivalSeconds-s.seconds;
-                BAR.setName(Text.literal("GALACTUS IS DESCENDING  •  "+Math.max(0,left)+"s"));BAR.setPercent(clamp(left/(float)CONFIG.arrivalSeconds));
-                w.spawnParticles(ParticleTypes.PORTAL,s.origin.getX(),s.origin.getY()+35,s.origin.getZ(),160,10,14,10,.1);
+                BAR.setName(Text.translatable("galactus.bar.arrival",Math.max(0,left)));BAR.setPercent(clamp(left/(float)CONFIG.arrivalSeconds));
+                // A coherent rift silhouette replaces a diffuse particle cloud.
+                for(int i=0;i<48;i++) {
+                    double a=i*Math.PI/24+s.seconds*.12;
+                    double radius=7+Math.sin(s.seconds*.2)*.7;
+                    for(var p:players)if(p.squaredDistanceTo(Vec3d.ofCenter(s.origin))<256*256) {
+                        // Default server particle delivery stops at 32 blocks;
+                        // this sky event must be visible from a safe viewpoint.
+                        w.spawnParticles(p,ParticleTypes.END_ROD,true,s.origin.getX()+Math.cos(a)*radius,s.origin.getY()+27+Math.sin(a)*radius,s.origin.getZ(),2,.06,.06,.06,.01);
+                        w.spawnParticles(p,ParticleTypes.REVERSE_PORTAL,true,s.origin.getX()+Math.cos(a)*radius,s.origin.getY()+27+Math.sin(a)*radius,s.origin.getZ(),4,.2,.2,.2,.025);
+                    }
+                }
                 if(s.seconds%5==0)sound(w,s.origin,SoundEvents.ENTITY_WITHER_SPAWN,.45f,.5f);
                 if(left<=0)invade(w);
             }
@@ -71,23 +83,26 @@ public final class InvasionController {
         var s=InvasionState.get(w);if(s.stage!=InvasionState.DORMANT)return;
         s.origin=surface(w,requested.getX()+48,requested.getZ());s.stage=InvasionState.PREPARATION;s.seconds=0;s.markDirty();warmup=5;
         ensureHerald(w,s);
-        message(w,"SHALLA-BAL: This world has been chosen. Galactus is coming.",Formatting.LIGHT_PURPLE);
-        message(w,"Prepare for "+CONFIG.preparationDays+" Minecraft days. Read The Coming Hunger journal; use Cosmic Receiver for coordinates.",Formatting.AQUA);
+        title(w,"galactus.title.herald","galactus.subtitle.herald",Formatting.WHITE);
         for(var p:w.getPlayers()) {give(p,CosmicItems.guide());give(p,new ItemStack(CosmicItems.RECEIVER));p.addCommandTag("galactus_journal_received");}
         s.guideGiven=true;
-        sound(w,s.origin,SoundEvents.ENTITY_ENDER_DRAGON_GROWL,.5f,.55f);
+        for(var p:w.getPlayers())p.playSoundToPlayer(GalactusMod.SURFER_SIGNAL,SoundCategory.AMBIENT,.7f,1);
         GalactusMod.LOG.info("Herald warning at {}",s.origin);
     }
     public static void arrive(ServerWorld w) {
         var s=InvasionState.get(w);s.stage=InvasionState.ARRIVAL;s.seconds=0;s.markDirty();
         message(w,"The sky fractures. The Devourer of Worlds is descending.",Formatting.DARK_PURPLE);
-        sound(w,s.origin,SoundEvents.ENTITY_WITHER_SPAWN,.6f,.5f);
+        title(w,"galactus.title.arrival","galactus.subtitle.arrival",Formatting.LIGHT_PURPLE);
+        BAR.setDarkenSky(true);
+        for(var p:w.getPlayers())p.playSoundToPlayer(GalactusMod.COSMIC_ARRIVAL,SoundCategory.AMBIENT,.7f,1);
     }
     public static void invade(ServerWorld w) {
         var s=InvasionState.get(w);s.stage=InvasionState.INVASION;s.seconds=0;s.hunger=0;s.markDirty();
         ensureBoss(w,s);
         for(int i=0;i<4;i++)if((s.broken&(1<<i))==0)ensureAnchor(w,s,i);
         message(w,"GALACTUS: Your world will sustain me. Destroy the four cosmic anchors to break his shield!",Formatting.RED);
+        title(w,"galactus.title.invasion","galactus.subtitle.invasion",Formatting.RED);
+        ring(w,net.minecraft.util.math.Vec3d.ofCenter(s.origin),14,ParticleTypes.EXPLOSION);
         sound(w,s.origin,SoundEvents.ENTITY_ENDER_DRAGON_GROWL,.8f,.5f);
     }
     private static void ensureHerald(ServerWorld w,InvasionState s) {
@@ -95,8 +110,8 @@ public final class InvasionController {
         var e=GalactusMod.HERALD.create(w);if(e==null)return;
         e.eventBound=true;
         e.refreshPositionAndAngles(s.origin.getX()+.5,s.origin.getY()+6,s.origin.getZ()+12,180,0);
-        e.setCustomName(Text.literal(s.ally?"Shalla-Bal • Your ally":"Shalla-Bal • Herald of Galactus"));
-        e.setCustomNameVisible(true);w.spawnEntity(e);s.herald=e.getUuid();s.markDirty();
+        e.setCustomName(Text.translatable(s.ally?"galactus.surfer.ally":"galactus.surfer.name"));
+        e.setCustomNameVisible(false);w.spawnEntity(e);s.herald=e.getUuid();s.markDirty();
     }
     private static void ensureBoss(ServerWorld w,InvasionState s) {
         if(s.boss!=null && w.getEntity(s.boss)!=null)return;
@@ -166,8 +181,8 @@ public final class InvasionController {
     public static boolean redeem(ServerWorld w,PlayerEntity player,CosmicEntity herald) {
         var s=InvasionState.get(w);
         if(!herald.getUuid().equals(s.herald)||s.stage==InvasionState.SAVED||s.ally)return false;
-        s.ally=true;s.markDirty();herald.setCustomName(Text.literal("Shalla-Bal • Your ally"));
-        message(w,"SHALLA-BAL: I will not sacrifice another world. Break his anchors; weaken him, and I will open the rift.",Formatting.AQUA);
+        s.ally=true;s.markDirty();herald.setCustomName(Text.translatable("galactus.surfer.ally"));
+        translatedMessage(w,"galactus.dialogue.redemption",Formatting.AQUA);
         return true;
     }
     public static boolean canNullify(ServerWorld w,PlayerEntity p) {
@@ -213,7 +228,8 @@ public final class InvasionController {
         for(var id:s.anchors)if(id!=null&&w.getEntity(id)!=null)w.getEntity(id).discard();
         clearRaids(w);
         BAR.clearPlayers();HUNGER.clearPlayers();BAR.setDarkenSky(false);
-        message(w,"WORLD SAVED — "+switch(method){case "NULLIFIER"->"The Ultimate Nullifier ended the hunger.";case "PORTAL"->"Galactus was banished beyond the dimensional rift.";case "HERALD"->"Shalla-Bal betrayed her master and saved your world.";default->"The Devourer of Worlds has fallen.";},Formatting.GOLD);
+        message(w,"WORLD SAVED — "+switch(method){case "NULLIFIER"->"The Ultimate Nullifier ended the hunger.";case "PORTAL"->"Galactus was banished beyond the dimensional rift.";case "HERALD"->"Silver Surfer defied his master and saved your world.";default->"The Devourer of Worlds has fallen.";},Formatting.GOLD);
+        title(w,"galactus.title.saved","galactus.subtitle.saved",Formatting.GOLD);
         for(var p:w.getPlayers())give(p,new ItemStack(CosmicItems.TROPHY));
         sound(w,s.origin,SoundEvents.UI_TOAST_CHALLENGE_COMPLETE,.8f,1);
         GalactusMod.LOG.info("World saved via {}",method);
@@ -276,6 +292,14 @@ public final class InvasionController {
     }
     private static void sound(ServerWorld w,BlockPos pos,SoundEvent event,float volume,float pitch) {w.playSound(null,pos,event,SoundCategory.HOSTILE,volume,pitch);}
     private static void message(ServerWorld w,String message,Formatting color) {for(var p:w.getPlayers())p.sendMessage(Text.literal(message).formatted(color),false);}
+    private static void translatedMessage(ServerWorld w,String key,Formatting color) {for(var p:w.getPlayers())p.sendMessage(Text.translatable(key).formatted(color),false);}
+    private static void title(ServerWorld w,String key,String subtitle,Formatting color) {
+        for(var p:w.getPlayers()) {
+            p.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket(20,70,30));
+            p.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.SubtitleS2CPacket(Text.translatable(subtitle).formatted(Formatting.GRAY)));
+            p.networkHandler.sendPacket(new net.minecraft.network.packet.s2c.play.TitleS2CPacket(Text.translatable(key).formatted(color)));
+        }
+    }
     private static void give(PlayerEntity p,ItemStack stack) { if(!p.getInventory().insertStack(stack))p.dropItem(stack,false); }
     static int count(PlayerEntity p,Item item) {int n=0;for(int i=0;i<p.getInventory().size();i++){var stack=p.getInventory().getStack(i);if(stack.isOf(item))n+=stack.getCount();}return n;}
     private static void take(PlayerEntity p,Item item,int count) {for(int i=0;i<p.getInventory().size()&&count>0;i++){var stack=p.getInventory().getStack(i);if(stack.isOf(item)){int n=Math.min(count,stack.getCount());stack.decrement(n);count-=n;}}}

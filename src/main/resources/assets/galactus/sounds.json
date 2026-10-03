@@ -1,0 +1,14 @@
+{
+  "surfer_signal": {
+    "subtitle": "galactus.sound.surfer_signal",
+    "sounds": [
+      "galactus:surfer_signal"
+    ]
+  },
+  "cosmic_arrival": {
+    "subtitle": "galactus.sound.cosmic_arrival",
+    "sounds": [
+      "galactus:cosmic_arrival"
+    ]
+  }
+}

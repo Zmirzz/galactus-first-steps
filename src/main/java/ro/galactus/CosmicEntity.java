@@ -41,6 +41,13 @@ public class CosmicEntity extends PathAwareEntity {
     }
     @Override public void tick() {
         super.tick();
+        if(getWorld().isClient && getType()==GalactusMod.HERALD && age%3==0) {
+            double a=Math.toRadians(getYaw());
+            // Cosmetic wake follows the actual board. It never damages terrain.
+            getWorld().addParticle(net.minecraft.particle.ParticleTypes.END_ROD,
+                getX()+Math.sin(a)*.8,getY()+.08,getZ()-Math.cos(a)*.8,
+                Math.sin(a)*.02,-.012,-Math.cos(a)*.02);
+        }
         if(!getWorld().isClient && eventBound) {
             var s=InvasionState.get((net.minecraft.server.world.ServerWorld)getWorld());
             var id=getType()==GalactusMod.GALACTUS?s.boss:s.herald;
@@ -49,8 +56,27 @@ public class CosmicEntity extends PathAwareEntity {
         if(!getWorld().isClient && getType()==GalactusMod.HERALD) {
             var s=InvasionState.get((net.minecraft.server.world.ServerWorld)getWorld());
             if(getUuid().equals(s.herald)) {
-                double a=age*.012;setPosition(s.origin.getX()+Math.sin(a)*12,s.origin.getY()+3+Math.sin(age*.03)*.8,s.origin.getZ()+Math.cos(a)*12);
-                setYaw((float)(-a*180/Math.PI));bodyYaw=getYaw();headYaw=getYaw();
+                var player=getWorld().getClosestPlayer(s.origin.getX(),s.origin.getY(),s.origin.getZ(),80,false);
+                double a=age*.007;
+                net.minecraft.util.math.Vec3d target;
+                if(player!=null) {
+                    var direction=net.minecraft.util.math.Vec3d.ofCenter(s.origin).subtract(player.getPos());
+                    direction=new net.minecraft.util.math.Vec3d(direction.x,0,direction.z);
+                    if(direction.lengthSquared()<.01)direction=new net.minecraft.util.math.Vec3d(0,0,1);
+                    target=player.getPos().add(direction.normalize().multiply(5)).add(0,.65+Math.sin(age*.035)*.15,0);
+                    // Hold position within interaction reach instead of fleeing
+                    // from a player who approaches with the redemption sigil.
+                    if(squaredDistanceTo(player)<12.25)target=new net.minecraft.util.math.Vec3d(getX(),target.y,getZ());
+                    var toward=player.getPos().subtract(getPos());
+                    setYaw((float)(Math.atan2(-toward.x,toward.z)*180/Math.PI));
+                } else {
+                    target=new net.minecraft.util.math.Vec3d(s.origin.getX()+Math.sin(a)*18,s.origin.getY()+4+Math.sin(age*.025)*.5,s.origin.getZ()+Math.cos(a)*18);
+                    setYaw((float)(-a*180/Math.PI));
+                }
+                var step=target.subtract(getPos()).multiply(.055);
+                if(step.lengthSquared()>.36)step=step.normalize().multiply(.6);
+                setPosition(getPos().add(step));bodyYaw=getYaw();headYaw=getYaw();
+                if(age%100==0)setCustomName(net.minecraft.text.Text.translatable(s.ally?"galactus.surfer.ally":"galactus.surfer.name"));
             }
         }
     }

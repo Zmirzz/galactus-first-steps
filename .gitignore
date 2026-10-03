@@ -6,3 +6,7 @@ run/
 run-client/
 run-prod/
 wrapper-check.jar
+__pycache__/
+evidence/
+logs/
+release*/

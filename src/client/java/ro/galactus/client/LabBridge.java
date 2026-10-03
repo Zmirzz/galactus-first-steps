@@ -34,6 +34,14 @@ final class LabBridge {
             switch(action) {
                 case "shot" -> {shotName=json.get("name").getAsString();shotDelay=10;}
                 case "capture" -> {capture=json.get("ticks").getAsInt();frame=0;}
+                case "presentation" -> {
+                    c.options.hudHidden=json.has("clean")&&json.get("clean").getAsBoolean();
+                    if(json.has("fov"))c.options.getFov().setValue(json.get("fov").getAsInt());
+                    if(json.has("language")) {
+                        c.options.language=json.get("language").getAsString();
+                        c.getLanguageManager().setLanguage(c.options.language);c.reloadResources();
+                    }
+                }
                 case "use" -> {c.options.useKey.setPressed(true);hold=json.has("hold")?json.get("hold").getAsInt():5;c.interactionManager.interactItem(c.player,Hand.MAIN_HAND);}
                 case "herald" -> {for(Entity e:c.world.getEntities())if(e.getType()==GalactusMod.HERALD){c.interactionManager.interactEntity(c.player,e,Hand.MAIN_HAND);break;}}
                 case "core" -> {var p=new BlockPos(json.get("x").getAsInt(),json.get("y").getAsInt(),json.get("z").getAsInt());c.interactionManager.interactBlock(c.player,Hand.MAIN_HAND,new BlockHitResult(Vec3d.ofCenter(p),Direction.UP,p,false));}

@@ -15,6 +15,8 @@ public class GalactusMod implements ModInitializer {
     public static final String ID = "galactus";
     public static final Logger LOG = LoggerFactory.getLogger(ID);
     public static Identifier id(String path) { return Identifier.of(ID, path); }
+    public static final net.minecraft.sound.SoundEvent SURFER_SIGNAL=Registry.register(Registries.SOUND_EVENT,id("surfer_signal"),net.minecraft.sound.SoundEvent.of(id("surfer_signal")));
+    public static final net.minecraft.sound.SoundEvent COSMIC_ARRIVAL=Registry.register(Registries.SOUND_EVENT,id("cosmic_arrival"),net.minecraft.sound.SoundEvent.of(id("cosmic_arrival")));
     public static final EntityType<CosmicEntity> GALACTUS = Registry.register(Registries.ENTITY_TYPE, id("galactus"),
         EntityType.Builder.<CosmicEntity>create(CosmicEntity::new, SpawnGroup.MONSTER).dimensions(9, 36).maxTrackingRange(16).trackingTickInterval(2).makeFireImmune().build());
     public static final EntityType<CosmicEntity> HERALD = Registry.register(Registries.ENTITY_TYPE, id("herald"),

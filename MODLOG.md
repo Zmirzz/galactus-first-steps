@@ -33,3 +33,17 @@ RCON binds 127.0.0.1 on lab-only ports 25578/25579. Development commands and cli
 ## Deliverables
 
 Release JAR, source ZIP, Romanian README, default config example, preview and silent MP4. Package excludes Minecraft files, libraries, JDK, Gradle caches, test worlds, logs and auth state. Code uses MIT; Marvel characters remain Marvel's. No publication or shared-KB PR authorized or performed.
+
+## Revision 1.1.0 — Silver Surfer and presentation
+
+User asked for a less crude result and specifically Silver Surfer. Replaced the primitive character art with original articulated models and individually packed painted UV islands in 512px atlases. Silver Surfer has anatomical chest/waist detail, elbow/knee joints, a wide surfing stance, tapered board rails, bright silver shading and a cosmetic wake. Galactus has layered armor, helmet channels and swept vanes, cheek/nose/mouth geometry, gauntlets and knees. Emissive masks light eyes and energy accents.
+
+Changed herald movement from a small orbit to a smooth player approach/hover. It holds position inside interaction reach. Registry ID stays `galactus:herald`; loaded events refresh the display name to Silver Surfer. Added timed dialogue and localized Romanian/English stage titles, circular rift particles and two original synthesized OGG stingers.
+
+Live visual review corrected overly dark silver, board foreshortening and fractional-UV holes in tiny eyes/rails. Safe-distance rift review exposed Minecraft's default 32-block particle delivery limit; sky particles now use forced per-player delivery for nearby viewers within 256 blocks. Captures use real native rendering.
+
+Build/JUnit passed after the final changes. Native sigil interaction allied the herald, entity/recipe/NBT/shield assertions passed, and player-attributed damage plus broken anchors produced `victory=HERALD`. Remapped JAR 1.1.0 loaded in the separate normal Fabric server and a newly generated natural world; development command absent as intended. Existing lab save retained across restart.
+
+Backups: `galactus-before-visual-revision` snapshot 20261003-174243 (run); `galactus-production-before-v11` snapshot 20261003-175658 (run-prod). Natural world remains under run-prod/galactus-v11-natural. A production restart must wait for process completion: natural-world shutdown spent about 50 seconds saving chunks, and an early relaunch was rejected by the world lock. No forced termination or save deletion.
+
+New deliverables go into `release-1.1.0`; original release directory remains as the earlier version. No public upload.

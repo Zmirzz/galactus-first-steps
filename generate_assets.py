@@ -47,7 +47,7 @@ write('assets/galactus/blockstates/dimensional_core.json',{'variants':{'':{'mode
 write('data/galactus/loot_table/blocks/dimensional_core.json',{'type':'minecraft:block','pools':[{'rolls':1,'entries':[{'type':'minecraft:item','name':'galactus:dimensional_core'}],'conditions':[{'condition':'minecraft:survives_explosion'}]}]})
 write('data/minecraft/tags/block/mineable/pickaxe.json',{'replace':False,'values':['galactus:dimensional_core']})
 lang={f'item.galactus.{n}':v[0] for n,v in items.items()}
-lang.update({'block.galactus.dimensional_core':'Dimensional Core','entity.galactus.galactus':'Galactus','entity.galactus.herald':'Shalla-Bal','entity.galactus.cosmic_anchor':'Cosmic Anchor','itemGroup.galactus':'Galactus: The Coming Hunger'})
+lang.update({'block.galactus.dimensional_core':'Dimensional Core','entity.galactus.galactus':'Galactus','entity.galactus.herald':'Silver Surfer','entity.galactus.cosmic_anchor':'Cosmic Anchor','itemGroup.galactus':'Galactus: The Coming Hunger'})
 write('assets/galactus/lang/en_us.json',lang)
 ro=dict(lang);ro.update({'item.galactus.cosmic_receiver':'Receptor Cosmic','item.galactus.cosmic_shard':'Fragment Cosmic','item.galactus.ultimate_nullifier':'Anulatorul Suprem','item.galactus.redemption_sigil':'Sigiliul Mantuirii','item.galactus.phase_conductor':'Conductor de Faza','item.galactus.world_savior':'Salvatorul Lumii','block.galactus.dimensional_core':'Nucleu Dimensional','entity.galactus.cosmic_anchor':'Ancora Cosmica'})
 write('assets/galactus/lang/ro_ro.json',ro)
@@ -62,3 +62,8 @@ for name,(pattern,keys) in recipes.items():
 write('data/galactus/advancement/recipes/cosmic_research.json',{'criteria':{'receiver':{'trigger':'minecraft:inventory_changed','conditions':{'items':[{'items':['galactus:cosmic_receiver']}]}}},'rewards':{'recipes':[f'galactus:{r}' for r in recipes]}})
 png(ROOT/'assets/galactus/icon.png',128,128,lambda x,y: (169,84,188,255) if (26<=x<=40 or 88<=x<=102) and 12<=y<=65 else (110,58,137,255) if 40<=x<=88 and 36<=y<=97 else (240,204,98,255) if 46<=x<=82 and 63<=y<=68 else (20,13,32,255))
 print('Recipes, native models, translations, item art and icon written')
+
+# Refined articulated character art and localized presentation.
+import runpy
+runpy.run_path(str(Path(__file__).with_name("generate_character_art.py")))
+runpy.run_path(str(Path(__file__).with_name("revise_presentation.py")))

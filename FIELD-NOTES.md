@@ -22,3 +22,5 @@ Built a persistent herald/preparation/invasion/occupation event, a colossal cust
 8. um win capture by HWND worked for video, but did not resolve a PID for audio; the handoff demo is silent.
 
 Evidence: MODLOG.md, release/VALIDATION.md, evidence/live-tests.txt, production and dev lab logs. No game files or runtime caches in release. No shared knowledge-base PR submitted.
+
+Revision 1.1.0: forced per-player ServerWorld particle delivery is necessary for a sky effect viewed beyond the default 32-block broadcast radius. Paint entire UV islands before face shading when cuboid dimensions are fractional: tiny eyes/rails otherwise sample transparent gaps. Silver Surfer now approaches/holds for interaction; richer articulated art and localized cinematic presentation verified with native screenshots in a natural production world.
