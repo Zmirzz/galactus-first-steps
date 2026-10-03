@@ -1,0 +1,25 @@
+plugins { id 'fabric-loom' version '1.10.5'; id 'maven-publish' }
+version = '1.0.0'
+group = 'ro.galactus'
+base { archivesName = 'galactus-first-steps' }
+repositories { mavenCentral() }
+dependencies {
+    minecraft 'com.mojang:minecraft:1.21.1'
+    mappings 'net.fabricmc:yarn:1.21.1+build.3:v2'
+    modImplementation 'net.fabricmc:fabric-loader:0.16.14'
+    modImplementation 'net.fabricmc.fabric-api:fabric-api:0.116.6+1.21.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+}
+loom {
+    splitEnvironmentSourceSets()
+    mods { galactus { sourceSet sourceSets.main; sourceSet sourceSets.client } }
+    runs {
+        client { runDir 'run-client'; if(project.hasProperty('galactusLab')) vmArg '-Dgalactus.lab=true'; programArgs '--width', '1280', '--height', '720' }
+        server { programArg 'nogui' }
+    }
+}
+processResources { inputs.property 'version', project.version; filesMatching('fabric.mod.json') { expand version: project.version } }
+tasks.withType(JavaCompile).configureEach { options.release = 21 }
+java { withSourcesJar(); sourceCompatibility = JavaVersion.VERSION_21; targetCompatibility = JavaVersion.VERSION_21 }
+jar { from('LICENSE') { rename { "LICENSE_galactus" } } }
+test { useJUnitPlatform() }

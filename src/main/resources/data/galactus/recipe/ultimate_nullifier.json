@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "SDS",
+    "ENE",
+    "SDS"
+  ],
+  "key": {
+    "S": {
+      "item": "galactus:cosmic_shard"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "result": {
+    "id": "galactus:ultimate_nullifier",
+    "count": 1
+  }
+}

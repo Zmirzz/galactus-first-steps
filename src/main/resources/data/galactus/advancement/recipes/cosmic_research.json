@@ -1,0 +1,25 @@
+{
+  "criteria": {
+    "receiver": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "galactus:cosmic_receiver"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "galactus:cosmic_receiver",
+      "galactus:ultimate_nullifier",
+      "galactus:redemption_sigil",
+      "galactus:phase_conductor",
+      "galactus:dimensional_core"
+    ]
+  }
+}

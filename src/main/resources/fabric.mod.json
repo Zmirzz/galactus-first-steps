@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "galactus",
+  "version": "${version}",
+  "name": "Galactus: The Coming Hunger",
+  "description": "A world invasion: a silver herald, a colossal planet eater, and three paths to save your world.",
+  "authors": ["Razvan", "Codex"],
+  "license": "MIT",
+  "icon": "assets/galactus/icon.png",
+  "environment": "*",
+  "entrypoints": {"main": ["ro.galactus.GalactusMod"], "client": ["ro.galactus.client.GalactusClient"]},
+  "depends": {"fabricloader": ">=0.16.14", "minecraft": "1.21.1", "java": ">=21", "fabric-api": "*"}
+}
